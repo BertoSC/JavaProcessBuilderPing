@@ -10,25 +10,28 @@ la suma es 10
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Map;
+
 
 public class Enviroment {
     public static void main(String[] args) {
 
-        if (args.length <= 0) {
-            System.out.println("You must indicate the command to execute");
-            System.exit(1);
-        }
 
-        String [] comando={"ping", "www.iessanclemente.net"};
+        // El comando ahora tiene dos partes: primero calculamos la suma, luego mostramos la variable
+        String[] comando = {"CMD", "/C", "echo El resultado de sumar %num1% y %num2% es:","&&", "set", "/A", "suma=num1+num2"};
 
-        String [] comando2={"pin", "www.iessanclemente.net"};
+        // Construimos el proceso
+        ProcessBuilder pb = new ProcessBuilder(comando);
 
-        String [] comando3={"ping -n", "www.iessanclemente.net"};
-
-        ProcessBuilder pb = new ProcessBuilder(comando3);
+        // Configuramos las variables de entorno
+        Map<String, String> entorno = pb.environment();
+        entorno.put("num1", "6");
+        entorno.put("num2", "4");
         pb.inheritIO();
 
+
         try {
+
             Process p = pb.start();
             int codRet = p.waitFor();
             System.out.println("The execution of " + Arrays.toString(args)
